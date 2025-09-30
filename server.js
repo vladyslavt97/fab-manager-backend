@@ -1,14 +1,25 @@
-// server.js
 import express from "express";
+import cors from "cors";
 import { Resend } from "resend";
 import "dotenv/config";
-import { templates } from "./templates.js";
+import { templates } from "./EmailTemplates/templates.js";
 import { MongoClient } from "mongodb";
 
 const app = express();
 const resend = new Resend(process.env.API_KEY);
-const PORT = 3000;
+const PORT = 3001;
 
+app.use(cors({
+  origin: [
+    "http://localhost:3000", 
+    "http://127.0.0.1:3000", 
+    "https://fab-manager.online"
+  ],
+  methods: ["GET", "POST"],
+  credentials: true
+}));
+
+app.use(express.json());
 // connect to MongoDB
 const client = new MongoClient(process.env.MONGODB_URI);
 
@@ -51,6 +62,18 @@ app.get("/send", async (req, res) => {
     });
 
     res.json({ success: true, data });
+  } catch (error) {
+    console.error("Resend error:", error);
+    res.status(500).json({ success: false, error });
+  }
+});
+
+app.post("/funny", async (req, res) => {
+  try{
+    const { word } = req.body;
+    console.log("😂 Funny word received:", word);
+    
+    res.json({ success: true });
   } catch (error) {
     console.error("Resend error:", error);
     res.status(500).json({ success: false, error });
