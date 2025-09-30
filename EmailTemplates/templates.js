@@ -1,4 +1,3 @@
-// templates.js
 export const templates = {
   welcome: ({ name, concerts }) => /*html*/ `
   <!DOCTYPE html>
@@ -15,14 +14,16 @@ export const templates = {
               
               <!-- Welcome -->
               <tr>
-                <td style="padding:30px; text-align:center;">
-                  <h1 style="margin:0; font-size:26px; font-weight:bold; color:#7b2cbf;">
-                    🎶 Welcome to Festival Academy Budapest
-                  </h1>
-                  <p style="margin:20px 0; font-size:16px; color:#333; line-height:1.6;">
-                    Dear ${name},<br /><br />
-                    We are delighted to welcome you to the <strong>Festival Academy Budapest</strong> community. 
-                    Here are some of our upcoming concerts:
+                <td style="padding:30px; text-align:left; font-size:16px; color:#333; line-height:1.6;">
+                  <p style="margin:0 0 15px 0;">Dear <strong>${name}</strong>,</p>
+                  <p style="margin:0 0 15px 0;">
+                    We are glad to welcome you at the <strong>Festival Academy Budapest 2026</strong>.
+                  </p>
+                  <p style="margin:0 0 15px 0;">
+                    We are pleased to share with you the schedule of the upcoming festival. Here are all the concerts, programs, and the musician partners that you will be playing with.
+                  </p>
+                  <p style="margin:0 0 15px 0;">
+                    Every evening before a concert, rehearsal, or masterclass day, you will receive a reminder with the program for the upcoming day. If there are changes to the schedule, we will notify you separately.
                   </p>
                 </td>
               </tr>
@@ -51,21 +52,21 @@ export const templates = {
                 </td>
               </tr>
 
-              <!-- CTA -->
+              <!-- Closing -->
               <tr>
-                <td style="padding:20px; text-align:center;">
-                  <a href="https://fab-manager.online"
-                     style="background:#7b2cbf; color:#fff; padding:14px 28px; font-size:16px; text-decoration:none; border-radius:6px; font-weight:bold; display:inline-block;">
-                     Explore All Concerts
-                  </a>
+                <td style="padding:20px 30px; font-size:16px; color:#333; line-height:1.6;">
+                  <p style="margin:0 0 15px 0;">With warmest regards,</p>
+                  <p style="margin:0; font-weight:bold; color:#7b2cbf;">Festival Academy Budapest</p>
                 </td>
               </tr>
 
               <!-- Footer -->
               <tr>
                 <td style="background:#f1f1f1; padding:20px; text-align:center; font-size:13px; color:#777;">
-                  © ${new Date().getFullYear()} Festival Academy Budapest – All rights reserved<br />
-                  <a href="https://fab-manager.online" style="color:#7b2cbf; text-decoration:none;">fab-manager.online</a>
+                  This is an automated message. If you have questions, please reach out to 
+                  <a href="mailto:festivalacademy@fab-manager.online" style="color:#7b2cbf; text-decoration:none;">festivalacademy@fab-manager.online</a>.
+                  <br /><br />
+                  © ${new Date().getFullYear()} Festival Academy Budapest – All rights reserved
                 </td>
               </tr>
 
@@ -75,5 +76,5 @@ export const templates = {
       </table>
     </body>
   </html>
-  `,
+  `
 };
