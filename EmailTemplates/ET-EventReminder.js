@@ -1,5 +1,5 @@
-export const templates = {
-  welcome: ({ name, concerts }) => /*html*/ `
+export const eventReminder = {
+  template: ({ name, concerts }) => /*html*/ `
   <!DOCTYPE html>
   <html>
     <head>

@@ -2,8 +2,9 @@ import express from "express";
 import cors from "cors";
 import { Resend } from "resend";
 import "dotenv/config";
-import { templates } from "./EmailTemplates/templates.js";
-import { MongoClient } from "mongodb";
+import { welcome } from "./EmailTemplates/ET-Welcome.js";
+import { eventReminder } from "./EmailTemplates/ET-EventReminder.js";
+import { MongoClient, ObjectId } from "mongodb";
 
 const app = express();
 const resend = new Resend(process.env.API_KEY);
@@ -49,7 +50,7 @@ app.get("/send", async (req, res) => {
     }));
     console.log("yes: ", concerts);
 
-    const html = templates.welcome({
+    const html = welcome.template({
       name: "Vlad",
       concerts: concerts,
     });
@@ -68,17 +69,63 @@ app.get("/send", async (req, res) => {
   }
 });
 
-app.post("/funny", async (req, res) => {
-  try{
-    const { word } = req.body;
-    console.log("😂 Funny word received:", word);
+app.post("/reminder_to_all_event_participants", async (req, res) => {
+  try {
+    const { eventDetails } = req.body;
+    console.log("eventDetails: ", eventDetails);
     
-    res.json({ success: true });
+
+    // connect to DB
+    await client.connect();
+    const db = client.db("FestivalAcademyBudapest");
+
+    // fetch all participants by _id
+    const participantsData = await db
+      .collection("artists_and_students")
+      .find({ _id: { $in: eventDetails.participants.map((id) => new ObjectId(id)) } })
+      .toArray();
+    console.log("participantsData: ", participantsData);
+    
+    if (!participantsData.length) {
+      return res.status(404).json({ success: false, error: "No matching participants found" });
+    }
+
+    // build emails to send
+    const results = [];
+    for (const person of participantsData) {
+      if (!person.email) {
+        console.warn(`Skipping ${person.fullName}, no email found`);
+        continue;
+      }
+
+      const html = eventReminder.template({
+        name: person.fullName,
+        occupation: person.occupation.join(", "),
+        languages: person.languages.join(", "),
+      });
+
+      try {
+        const data = await resend.emails.send({
+          from: "Fab Manager <noreply@fab-manager.online>",
+          to: person.email,
+          subject: "🎶 Festival Academy Budapest – Event Reminder",
+          html,
+        });
+
+        results.push({ email: person.email, success: true, data });
+      } catch (err) {
+        console.error(`Failed to send email to ${person.email}:`, err);
+        results.push({ email: person.email, success: false, error: err });
+      }
+    }
+
+    res.json({ success: true, sent: results });
   } catch (error) {
     console.error("Resend error:", error);
-    res.status(500).json({ success: false, error });
+    res.status(500).json({ success: false, error: error.message });
   }
 });
+
 
 app.listen(PORT, () =>
   console.log(`🚀 Server running at http://localhost:${PORT}`)
