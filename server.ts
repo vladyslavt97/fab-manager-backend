@@ -22,7 +22,7 @@ app.use(cors({
 
 app.use(express.json());
 // connect to MongoDB
-const client = new MongoClient(process.env.MONGODB_URI);
+const client = new MongoClient(process.env.MONGODB_URI!);
 
 app.get("/send", async (req, res) => {
   try {
@@ -82,7 +82,7 @@ app.post("/reminder_to_all_event_participants", async (req, res) => {
     // fetch all participants by _id
     const participantsData = await db
       .collection("artists_and_students")
-      .find({ _id: { $in: eventDetails.participants.map((id) => new ObjectId(id)) } })
+      .find({ _id: { $in: eventDetails.participants.map((id:number) => new ObjectId(id)) } })
       .toArray();
     console.log("participantsData: ", participantsData);
     
@@ -100,8 +100,7 @@ app.post("/reminder_to_all_event_participants", async (req, res) => {
 
       const html = eventReminder.template({
         name: person.fullName,
-        occupation: person.occupation.join(", "),
-        languages: person.languages.join(", "),
+        concertDetails: eventDetails
       });
 
       try {
@@ -121,8 +120,13 @@ app.post("/reminder_to_all_event_participants", async (req, res) => {
 
     res.json({ success: true, sent: results });
   } catch (error) {
-    console.error("Resend error:", error);
-    res.status(500).json({ success: false, error: error.message });
+    if (error instanceof Error) {
+      console.error("Resend error:", error.message);
+      res.status(500).json({ success: false, error: error.message });
+    } else {
+      console.error("Unknown error:", error);
+      res.status(500).json({ success: false, error: String(error) });
+    }
   }
 });
 

@@ -1,4 +1,12 @@
 {
+  "name": "fab-manager-backend",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "ts-node src/server.ts",
+    "build": "tsc",
+    "start": "node dist/server.js"
+  },
   "dependencies": {
     "@react-email/components": "^0.5.5",
     "@react-email/tailwind": "^1.2.2",
@@ -9,5 +17,13 @@
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
     "resend": "^6.1.0"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.3",
+    "@types/mongodb": "^4.0.6",
+    "@types/node": "^24.6.2",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3"
   }
 }

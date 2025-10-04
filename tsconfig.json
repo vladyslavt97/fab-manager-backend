@@ -1,0 +1,29 @@
+{
+  "compilerOptions": {
+    /* === Output Settings === */
+    "target": "ES2020",               // Modern JS syntax
+    "module": "NodeNext",             // Required for Node ESM support
+    "moduleResolution": "NodeNext",
+    "outDir": "dist",                 // Where compiled JS goes
+    "rootDir": ".",                   // ✅ root of the project
+    "allowJs": true,           // ✅ allow importing plain .js files
+    "checkJs": false,
+    /* === Compatibility & Imports === */
+    "esModuleInterop": true,          // Enables clean default imports
+    "forceConsistentCasingInFileNames": true,
+
+    /* === Strictness === */
+    "strict": true,
+    "skipLibCheck": true,
+
+    /* === Quality of Life === */
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+
+    /* === Node Declarations === */
+    "lib": ["ES2020"],
+    "types": ["node"]
+  },
+  "include": ["**/*.ts"],             // ✅ compile all .ts files anywhere
+  "exclude": ["node_modules", "dist"] // don’t recompile output or deps
+}

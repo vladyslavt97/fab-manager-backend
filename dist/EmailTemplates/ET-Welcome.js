@@ -1,5 +1,5 @@
-export const eventReminder = {
-  template: ({ name, concerts }) => /*html*/ `
+export const welcome = {
+    template: ({ name, concerts }) => /*html*/ `
   <!DOCTYPE html>
   <html>
     <head>
@@ -31,9 +31,8 @@ export const eventReminder = {
               <!-- Concerts -->
               <tr>
                 <td style="padding:20px 30px;">
-                  ${
-                    concerts && concerts.length
-                      ? concerts.map(c => `
+                  ${concerts && concerts.length
+        ? concerts.map(c => `
                         <table width="100%" cellpadding="6" cellspacing="0" border="0" style="margin-bottom:20px; border:1px solid #ddd; border-radius:6px; font-size:14px; color:#444;">
                           <tr><td colspan="2" style="font-weight:bold; color:#7b2cbf;">${c.title}</td></tr>
                           <tr><td style="font-weight:bold;">Start:</td><td>${c.start}</td></tr>
@@ -47,8 +46,7 @@ export const eventReminder = {
                           <tr><td style="font-weight:bold;">Last Edited:</td><td>${c.lastEdited}</td></tr>
                         </table>
                       `).join("")
-                      : "<p>No concerts scheduled at the moment.</p>"
-                  }
+        : "<p>No concerts scheduled at the moment.</p>"}
                 </td>
               </tr>
 
