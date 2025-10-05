@@ -1,5 +1,4 @@
 import express from "express";
-const app = express();
 import { welcome } from "../EmailTemplates/ET-Welcome.js";
 import { Resend } from "resend";
 import { mongoDbBasicQuery } from "../utils/mongodb.js";
@@ -8,7 +7,7 @@ const router = express.Router();
 
 const resend = new Resend(process.env.API_KEY);
 
-app.get("/send", async (req, res) => {
+router.get("/", async (req, res) => {
   try {
     const db = await mongoDbBasicQuery();
 

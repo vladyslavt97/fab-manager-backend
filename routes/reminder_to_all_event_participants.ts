@@ -15,10 +15,21 @@ router.post("/", async (req, res) => {
     // fetch all participants by _id
     const db = await mongoDbBasicQuery();
     const participantsData = await getIdentitiesByIdsList(db, eventDetails.participants);
-
+    
     if (!participantsData.length) {
       return res.status(404).json({ success: false, error: "No matching participants found" });
     }
+
+    // Replace participant IDs with their full names for email template
+    const participantNames = eventDetails.participants.map((participantId: string) => {
+      const participant = participantsData.find(
+        (p: any) => p._id.toString() === participantId.toString()
+      );
+      return participant ? participant.fullName : participantId; // fallback to ID if not found
+    });
+
+    // Optional: replace it inside eventDetails for template usage
+    eventDetails.participants = participantNames;
 
     // build emails to send
     const results = [];
@@ -27,7 +38,8 @@ router.post("/", async (req, res) => {
         console.warn(`Skipping ${person.fullName}, no email found`);
         continue;
       }
-
+      console.log("eventDetails: ", eventDetails);
+      
       const html = eventReminder.template({
         name: person.fullName,
         concertDetails: eventDetails
