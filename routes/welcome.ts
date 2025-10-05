@@ -1,18 +1,17 @@
 import express from "express";
 const app = express();
-import { MongoClient } from "mongodb";
 import { welcome } from "../EmailTemplates/ET-Welcome.js";
 import { Resend } from "resend";
+import { mongoDbBasicQuery } from "../utils/mongodb.js";
 
 const router = express.Router();
 
-const client = new MongoClient(process.env.MONGODB_URI!);
 const resend = new Resend(process.env.API_KEY);
 
 app.get("/send", async (req, res) => {
   try {
-    await client.connect();
-    const db = client.db("FestivalAcademyBudapest");
+    const db = await mongoDbBasicQuery();
+
     const rawConcerts = await db.collection("schedule").find({}).toArray();
 
     const concerts = rawConcerts.map((c) => ({

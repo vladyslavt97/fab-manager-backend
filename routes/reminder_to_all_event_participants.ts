@@ -1,30 +1,22 @@
 import express from "express";
-import { MongoClient, ObjectId } from "mongodb";
 import { eventReminder } from "../EmailTemplates/ET-EventReminder.js";
 import { Resend } from "resend";
+import { getIdentitiesByIdsList, mongoDbBasicQuery } from "../utils/mongodb.js";
+import { MongoClient, ObjectId } from "mongodb";
 
 const router = express.Router();
 
-const client = new MongoClient(process.env.MONGODB_URI!);
 const resend = new Resend(process.env.API_KEY);
 
 router.post("/", async (req, res) => {
   try {
     const { eventDetails } = req.body;
     console.log("eventDetails: ", eventDetails);
-    
-
-    // connect to DB
-    await client.connect();
-    const db = client.db("FestivalAcademyBudapest");
 
     // fetch all participants by _id
-    const participantsData = await db
-      .collection("artists_and_students")
-      .find({ _id: { $in: eventDetails.participants.map((id:number) => new ObjectId(id)) } })
-      .toArray();
-    console.log("participantsData: ", participantsData);
-    
+    const db = await mongoDbBasicQuery();
+    const participantsData = await getIdentitiesByIdsList(db, eventDetails.participants);
+
     if (!participantsData.length) {
       return res.status(404).json({ success: false, error: "No matching participants found" });
     }
