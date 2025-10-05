@@ -2,7 +2,6 @@ import express from "express";
 import { eventReminder } from "../EmailTemplates/ET-EventReminder.js";
 import { Resend } from "resend";
 import { getIdentitiesByIdsList, mongoDbBasicQuery } from "../utils/mongodb.js";
-import { MongoClient, ObjectId } from "mongodb";
 
 const router = express.Router();
 
