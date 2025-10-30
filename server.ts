@@ -2,7 +2,7 @@ import express from "express";
 import cors from "cors";
 import "dotenv/config";
 import reminderRoute from "./routes/reminder_to_all_event_participants.js";
-import welcomRoute from "./routes/welcome.js";
+import welcomeRoute from "./routes/welcome.js";
 
 const app = express();
 const PORT = 3001;
@@ -20,7 +20,7 @@ app.use(cors({
 app.use(express.json());
 
 //routes
-app.use("/welcome", welcomRoute);
+app.use("/welcome", welcomeRoute);
 app.use("/reminder_to_all_event_participants", reminderRoute);
 
 app.listen(PORT, () =>
