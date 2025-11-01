@@ -4,12 +4,13 @@ import { Resend } from "resend";
 const router = express.Router();
 
 const resend = new Resend(process.env.API_KEY);
-const TEST_EMAIL_INTERVAL_MINUTES = 20;
+const TEST_EMAIL_INTERVAL_MINUTES = 30;
 const TEST_EMAIL_RECIPIENT = "vladyslavt97@gmail.com";
 const TEST_EMAIL_SENDER = "Fab Manager <noreply@fab-manager.online>";
 
 let intervalId: NodeJS.Timeout | null = null;
 let lastRun: Date | null = null;
+let schedulerStartedAt: Date | null = null;
 
 const logPrefix = "[TestEmailScheduler]";
 
@@ -25,6 +26,8 @@ const ensureSchedulerRunning = () => {
 
   const intervalMs = TEST_EMAIL_INTERVAL_MINUTES * 60 * 1000;
 
+  schedulerStartedAt = new Date();
+
   const runJob = async () => {
     const runAt = new Date();
     lastRun = runAt;
@@ -38,7 +41,7 @@ const ensureSchedulerRunning = () => {
         html: `
           <main style="font-family: Arial, sans-serif; padding: 24px;">
             <h1>FAB Manager Scheduler Test</h1>
-            <p>This email was sent automatically to confirm the 20-minute scheduler is alive.</p>
+            <p>This email was sent automatically to confirm the 30-minute scheduler is alive.</p>
             <p><strong>Run timestamp:</strong> ${runAt.toISOString()}</p>
             <p>Adjust your scheduler settings in <code>TEST_EMAIL_INTERVAL_MINUTES</code>, <code>TEST_EMAIL_RECIPIENT</code>, and <code>TEST_EMAIL_SENDER</code>.</p>
           </main>
@@ -53,18 +56,21 @@ const ensureSchedulerRunning = () => {
 
   console.log(`${logPrefix} Starting scheduler (interval ${TEST_EMAIL_INTERVAL_MINUTES} minutes).`);
   intervalId = setInterval(runJob, intervalMs);
-
-  // Kick off first run immediately for visibility.
-  void runJob();
 };
 
 ensureSchedulerRunning();
 
 const nextRun = () => {
-  if (!intervalId || !lastRun) {
+  if (!intervalId) {
     return null;
   }
-  return new Date(lastRun.getTime() + TEST_EMAIL_INTERVAL_MINUTES * 60 * 1000);
+
+  const base = lastRun ?? schedulerStartedAt;
+  if (!base) {
+    return null;
+  }
+
+  return new Date(base.getTime() + TEST_EMAIL_INTERVAL_MINUTES * 60 * 1000);
 };
 
 router.get("/", (_req, res) => {
@@ -110,7 +116,7 @@ router.post("/trigger-now", async (_req, res) => {
 
     console.log(`${logPrefix} Manual email sent. Response id: ${response || "unknown"}`);
 
-    res.json({ success: true });
+    res.json({ success: true, id: response ?? null });
   } catch (error) {
     console.error(`${logPrefix} Manual trigger failed`, error);
     res.status(500).json({ success: false, error });
