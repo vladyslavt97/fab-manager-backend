@@ -92,7 +92,7 @@ router.post("/trigger-now", async (_req, res) => {
   if (!TEST_EMAIL_RECIPIENT) {
     return res.status(400).json({
       success: false,
-      error: "TEST_EMAIL_RECIPIENT env var missing. Scheduler/trigger disabled.",
+      error: "TEST_EMAIL_RECIPIENT env var missing. Scheduler/trigger disabled....",
     });
   }
 
