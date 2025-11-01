@@ -25,6 +25,10 @@ app.use("/welcome", welcomeRoute);
 app.use("/reminder_to_all_event_participants", reminderRoute);
 app.use("/test_email_scheduler", testEmailSchedulerRoute);
 
+app.get("/health", (_req, res) => {
+  res.json({ ok: true, message: "Scheduler service alive" });
+});
+
 app.listen(PORT, () =>
   console.log(`🚀 Server running at http://localhost:${PORT}`)
 );
