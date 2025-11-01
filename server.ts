@@ -6,7 +6,7 @@ import welcomeRoute from "./routes/welcome.js";
 import testEmailSchedulerRoute from "./routes/testEmailScheduler.js";
 
 const app = express();
-const PORT = 3001;
+const PORT = Number(process.env.PORT) || 3001;
 
 app.use(cors({
   origin: [
