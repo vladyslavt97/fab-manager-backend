@@ -13,7 +13,8 @@ app.use(cors({
     "http://localhost:3000",
     "http://127.0.0.1:3000",
     "https://fab-manager.online",
-    "https://fab-manager-backend.onrender.com"
+    "https://fab-manager-backend.onrender.com",
+    "https://fab-manager.vercel.app"
   ],
   methods: ["GET", "POST"],
   credentials: true
